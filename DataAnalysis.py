@@ -1,10 +1,11 @@
 import pandas as pd
 import calendar
 import statistics
-from Graphics import GraficosClass as graph
+from Graphics import GraficosClass
 from datetime import datetime
 from datetime import timedelta
 
+graph = GraficosClass()
 
 class DataAnalysisClass:
     def __init__(self):
@@ -31,14 +32,14 @@ class DataAnalysisClass:
     def bancadaFrio(self,df):
         fractions = df.loc[df["Feedback da Temperatura"] == "Frio"]["Informe a sua bancada"].value_counts()
         labels = 'B1', 'B2', 'B3', 'B4','B5','B6','B7','M'
-        offsets = (0.1, 0.05, 0.1, 0.08)
+        offsets = (0.1, 0.05, 0.1, 0.08,0.1, 0.05, 0.1, 0.08)
         graph.GeraPizza(fractions, offsets, labels)
 
 
     def bancadaCalor(self,df):
         fractions = df.loc[df["Feedback da Temperatura"] == "Quente"]["Informe a sua bancada"].value_counts()
         labels = 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'M'
-        offsets = (0.1, 0.05, 0.1, 0.08)
+        offsets = (0.1, 0.05, 0.1, 0.08,0.1, 0.05, 0.1, 0.08)
         graph.GeraPizza(fractions, offsets, labels)
 
 
@@ -116,7 +117,9 @@ class DataAnalysisClass:
 
     def kiloWatt_hora(self,df):
         corrente_por_dia = df[['corrente', 'horario']]
-
+        data_corrente = {'Horario': [],
+                     'Corrente': []
+                     }
         for h in range(0, 24):
             cmd2 = "horario >= '"
             if h < 10:
@@ -129,9 +132,12 @@ class DataAnalysisClass:
             kW = sum(corrente_h_dia['corrente']) * 220 / 1000 * 60 / 3600 #somatorio das coletas no horario * tensão / Kilo * segundos / horas
 
             if corrente_h_dia['corrente'].mean() > 1:
-                print(round(kW, 2), cmd2.replace('horario >=', '').replace('and', '-').replace('horario <=', ''))
+                #print(round(kW, 2), cmd2.replace('horario >=', '').replace('and', '-').replace('horario <=', ''))
+                data_corrente['Horario'].append(h)
+                data_corrente['Corrente'].append(round(kW, 2))
 
-        pass
+        dados = pd.DataFrame(data_corrente)
+        graph.geraHistoGrama(dados, 'Horario',False)
 
     def kiloWatt_dia(self):
         pass
