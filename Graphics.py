@@ -23,7 +23,7 @@ class GraficosClass:
         plt.show()
 
 
-    def geraHistoGrama(self,dataframe,classe,ordem):
+    def geraHistoGrama(self,dataframe,classe,ordem,scale=[0,25]):
         '''
         função que gera gráficos no formato de histograma onde o eixo x contém a frequencia dos dados e o eixo y as classes
         :param dataframe: dataframe com os dados
@@ -35,5 +35,5 @@ class GraficosClass:
          .groupby(classe).mean()
          .sort_values(by=classe, ascending=ordem)
          .plot.barh(figsize=(15, 10), width=.7))
-        plt.xlim(left=0, right=25)
+        plt.xlim(left=scale[0], right=scale[1])
         plt.show()
